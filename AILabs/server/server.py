@@ -2,17 +2,15 @@ import asyncio
 import os
 
 from dotenv import load_dotenv
-from openai import AsyncOpenAI
+import ollama
 from elevenlabs import AsyncElevenLabs
 
 load_dotenv()
 
 # Replace with your Speech Engine ID from step 4
-SPEECH_ENGINE_ID = "seng_4901m2k517adf2xst4acyfc3g79r"
+SPEECH_ENGINE_ID = os.getenv("ENGINE")
 
-openai = AsyncOpenAI(
-  api_key=os.getenv("OPENAI_API_KEY"),
-)
+
 elevenlabs = AsyncElevenLabs(
   api_key=os.getenv("ELEVENLABS_API_KEY"),
 )
@@ -23,9 +21,8 @@ def on_init(conversation_id, session):
 
 
 async def on_transcript(transcript, session):
-    stream = await openai.responses.create(
-        model="gpt-4o",
-        instructions="You are a helpful voice assistant. Keep responses concise and conversational.",
+    stream = await ollama.chat(
+        model="qwen3.6:35b",
         input=[
             {"role": "assistant" if m.role == "agent" else m.role, "content": m.content}
             for m in transcript
