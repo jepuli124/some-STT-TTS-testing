@@ -12,7 +12,7 @@ elevenlabs = ElevenLabs(
 )
 
 
-@app.route("/api/token/ws")
+@app.route("/api/token")
 def get_token():
     # Replace with your Speech Engine ID from step 4 of the server setup
     speech_engine_id = os.getenv("ENGINE")

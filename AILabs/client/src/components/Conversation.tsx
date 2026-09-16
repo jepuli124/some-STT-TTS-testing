@@ -3,7 +3,7 @@ import { useCallback } from "react";
 
 
 async function getToken(): Promise<string> {
-  const response = await fetch("/api/token/ws");
+  const response = await fetch("/api/token");
   if (!response.ok) {
     throw Error("Failed to get conversation token");
   }

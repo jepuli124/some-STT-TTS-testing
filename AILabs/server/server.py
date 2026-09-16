@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from dotenv import load_dotenv
-import ollama
+from ollama import AsyncClient
 from elevenlabs import AsyncElevenLabs
 
 load_dotenv()
@@ -21,13 +21,15 @@ def on_init(conversation_id, session):
 
 
 async def on_transcript(transcript, session):
-    stream = await ollama.chat(
+    client = AsyncClient()
+    stream = await client.chat(
         model="qwen3.6:35b",
-        input=[
+        messages=[
             {"role": "assistant" if m.role == "agent" else m.role, "content": m.content}
             for m in transcript
         ],
-        stream=True,
+        think=False,
+        stream=True
     )
 
     await session.send_response(stream)
@@ -46,7 +48,7 @@ async def main():
 
     await engine.serve(
         port=3001,
-        path="/ws",
+        # path="/ws",
         debug=True,
         on_init=on_init,
         on_transcript=on_transcript,
